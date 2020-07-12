@@ -10,14 +10,18 @@
 #  EMPTY BOARD SIZE OF BOARD_SIZE
 
 class HexBoard:
-    def __init__(self, BOARD_SIZE=[3, 3]):
+    def __init__(self, BOARD_SIZE=[3, 3], BOARD=None):
         self.BOARD_SIZE = BOARD_SIZE
-        self.BOARD = [['.' for __ in range(self.BOARD_SIZE[0])] for _ in range(self.BOARD_SIZE[1])]
+        if BOARD is None:
+            self.BOARD = [['.' for __ in range(self.BOARD_SIZE[0])] for _ in range(self.BOARD_SIZE[1])]
+        else:
+            self.BOARD = BOARD
         # self.BOARD = [
         #     ['B','W','W'],
         #     ['W','W','B'],
         #     ['B','W','B'],
         # ]
+        self.valid_moves = [[i, j] for i in range(self.BOARD_SIZE[0]) for j in range(self.BOARD_SIZE[1])]
         self.done = False # game is over or not
 
     def step(self, color, action):
@@ -28,8 +32,10 @@ class HexBoard:
                 # False if there is an error in the input
             result = self.check_game_status()
         except Exception:
+            # print('Valid moves are:', self.valid_moves)
             return 0, 0, 0, 0, False
         # reward system: win +1 / loss -1
+        self.valid_moves.remove(action)
         if result == color:
             reward = 1
         elif result == '=':

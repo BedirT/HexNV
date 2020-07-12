@@ -11,7 +11,7 @@ class ExpTree:
     def print_tree(self, root=None, prefix=''):
         if root is None:
             root = self.root
-        print('-' + prefix + str(root.val))
+        print('-' + prefix + str(root.rep))
         try:
             self.print_tree(root.left, prefix+'--')
         except:
@@ -64,7 +64,7 @@ class ExpTree:
         # 2.1 Using postfix exp to parse exp tree
         the_stack = []
         for exp in the_queue:
-            if type(exp) is Cell:
+            if isinstance(exp, Cell):
                 the_stack.append(exp)
             else:
                 exp.left = the_stack.pop()

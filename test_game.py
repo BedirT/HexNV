@@ -2,14 +2,16 @@ from hex import HexBoard
 from actor import RandomAgent
 
 if __name__ == '__main__':
-    actors = [RandomAgent('W'), RandomAgent('B')]
+    exp = 'a1 {a2 {a3, b3} b2 {b3, c3}}'
+    actors = [RandomAgent('B'), RandomAgent('W')]
     counter = {'W':0, 'B':0}
 
-    size_x, size_y = 4, 4
+    board_size = [3, 3]
+    num_of_games = 5
 
-    for _ in range(1000):
-        game = HexBoard([size_x, size_y])
-        for i in range(size_x * size_y):
+    for _ in range(num_of_games):
+        game = HexBoard(board_size)
+        for i in range(board_size[0] * board_size[1]):
             actor = actors[i % 2]
             action = actor.step(game.BOARD)
             # game.printBoard()
