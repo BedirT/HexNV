@@ -44,6 +44,10 @@ class HexBoard:
             reward = -1
         return self.BOARD, self.done, result, reward, input_err
 
+    def rewind(self, action):
+        self.BOARD[action[0]][action[1]] = '.'
+        self.valid_moves.append(action)
+
     def checkEdge(self, color, node):
         if color == 'W' and node[1] == self.BOARD_SIZE[1]-1:
             return True
