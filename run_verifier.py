@@ -25,7 +25,7 @@ def win_reached(game):
     game.printBoard()
 
 def play_game(game_x, player, last_move):
-    game = copy.copy(game_x)
+    game = copy.deepcopy(game_x)
     # print(id(game))
     game_stat = game.check_game_status()
     if game_stat != '=':  

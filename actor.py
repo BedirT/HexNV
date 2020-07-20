@@ -37,7 +37,7 @@ class RuleAgent:
         c = Cell('a1')
         d = Or()
         c.left = d
-        d.left = Cell('a2')
+        d.left = Cell('b1')
         d.right = Cell('b2')
         root = c 
         #####################
