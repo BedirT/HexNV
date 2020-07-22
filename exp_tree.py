@@ -26,7 +26,6 @@ class ExpTree:
         matches = pattern.finditer(exp)
 
         ls = [i.group() for i in matches]
-        # print(ls)
 
         # 1 - Converting exp to postfix
         the_queue = [] 

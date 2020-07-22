@@ -31,7 +31,7 @@ class RandomAgent:
 class RuleAgent:
     def __init__(self, color, exp):
         self.color = color
-        # exp_tree = ExpTree(exp)
+        exp_tree = ExpTree(exp)
         
         ##### PLACEHOLDER TREE
         c = Cell('a1')
@@ -54,16 +54,16 @@ class RuleAgent:
     def next_moves(self, root):
         if root is None:
             return [self.strategy]
-        pos_moves = self.getChilds(root.left) + self.getChilds(root.right)
+        pos_moves = self.getChildren(root.left) + self.getChildren(root.right)
         return pos_moves
 
-    def getChilds(self, root):
+    def getChildren(self, root):
         children = []
         if root is None:
             return []
         elif root.val == 'or':
-            children = children + self.getChilds(root.left)
-            children = children + self.getChilds(root.right)
+            children = children + self.getChildren(root.left)
+            children = children + self.getChildren(root.right)
         else:
             children.append(root)
         return children
