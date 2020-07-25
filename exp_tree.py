@@ -3,6 +3,7 @@ import re
 from expressions import And
 from expressions import Or
 from expressions import Cell
+from expressions import Root
 
 class ExpTree:
     def __init__(self, exp):
@@ -67,7 +68,11 @@ class ExpTree:
                 the_stack.append(exp)
             else:
                 exp.left = the_stack.pop()
+                exp.left.parent = exp
                 exp.right = the_stack.pop()
+                exp.right.parent = exp
                 the_stack.append(exp)
+
+        the_stack[0].parent = Root(the_stack[0])
 
         return the_stack[0] # returning the root
