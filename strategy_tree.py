@@ -2,6 +2,7 @@ from expressions import And
 from expressions import Or
 from expressions import Cell
 from expressions import Root
+from expressions import TrueCell
 
 import copy
 
@@ -13,12 +14,15 @@ def appendToLeaves(leaves, root):
         appendToLeaves(child, root)
 
 def changeTheCorrespondingChild(target ,old, new):
+    if isinstance(target, Root):
+        return new 
     if target.left == old:
         target.left = new
     elif target.right == old:
         target.right = new
     else:
         raise Exception
+    return None
 
 def parseStrategyTree(root):
     '''
@@ -38,7 +42,7 @@ def parseStrategyTree(root):
     parseStrategyTree(root.left)
     parseStrategyTree(root.right)
 
-    print(type(root), type(root.left), type(root.right))
+    end = None
 
     if isinstance(root, And):
         # Both branches are Cell objects
@@ -47,60 +51,64 @@ def parseStrategyTree(root):
             v1 = root.left
             v2 = root.right
             # 2
+            # print(type(root.parent))
             v2.parent = root.parent
             root.parent.children.append(v2)
-            # 3
-            v2.children.append(v1)
             # 4
-            appendToLeaves(v1, v2)
+            appendToLeaves(v2, [v1])
+
+            end = changeTheCorrespondingChild(root.parent, root, v2)
             root = v2
         elif isinstance(root.left, Or) and isinstance(root.right, Cell):
-            Or1 = root.left
+            or1 = root.left
             v = root.right
             
             v.parent = root.parent
             root.parent.children.append(v)
-            changeTheCorrespondingChild(root.parent, root, v)
-            v.children.extend([Or1.left, Or1.right])
+            v.children.extend(or1.children)
+            end = changeTheCorrespondingChild(root.parent, root, v)
 
             root = v
         elif isinstance(root.left, Cell) and isinstance(root.right, Or):
             v = root.left
-            Or1 = root.right
+            or1 = root.right
             
             v.parent = root.parent
             root.parent.children.append(v)
-            changeTheCorrespondingChild(root.parent, root, v)
-            v.children.extend([Or1.left, Or1.right])
+            v.children.extend(or1.children)
+            end = changeTheCorrespondingChild(root.parent, root, v)
 
             root = v
         elif isinstance(root.left, Or) and isinstance(root.right, Or):
             # CHANGE NEEDED AFTER OR-ROOT
             or1 = root.left
             or2 = root.right
+
             # 1
             or1.parent = root.parent
             root.parent.children.append(or1)
-            changeTheCorrespondingChild(root.parent, root, or1)
+            end = changeTheCorrespondingChild(root.parent, root, or1)
             # 2
-            appendToLeaves(or1.left, [or2.left, or2.right])
-            appendToLeaves(or1.right, [or2.left, or2.right])
-            root = parseStrategyTree(or1)
+            for c in or1.children:
+                appendToLeaves(c, or2.children)
     elif isinstance(root, Or):
         if isinstance(root.left, Or) and isinstance(root.right, Cell):
             or1 = root.left
             v = root.right
             # 1
-            root.children.extend([or1.left, or1.right, v])
+            root.children.extend(or1.children)
+            root.children.append(v)
         elif isinstance(root.left, Cell) and isinstance(root.right, Or):
-            b = root.left
+            v = root.left
             or1 = root.right
             # 1
-            root.children.extend([or1.left, or1.right, v])
+            root.children.extend(or1.children)
+            root.children.append(v)
         elif isinstance(root.left, Or) and isinstance(root.right, Or):
             or1 = root.left
             or2 = root.right
-            root.children.extend([or1.left, or1.right, or2.left, or2.right])
+            root.children.extend(or1.children)
+            root.children.extend(or2.children)
         elif isinstance(root.left, Cell) and isinstance(root.right, Cell):
             v1 = root.left
             v2 = root.right
@@ -108,11 +116,10 @@ def parseStrategyTree(root):
     else:
         raise Exception
     # print(type(root.children))
-    if isinstance(root.parent, Root):
-        return root
+    if end:
+        return end
 
 def print_tree(root, prefix=''):
-    print(type(root.children))
     print('-' + prefix + str(root.rep))
     for c in root.children:
         print_tree(c, prefix+'--')

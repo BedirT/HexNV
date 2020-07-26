@@ -34,6 +34,12 @@ class Cell(Exp):
     def __str__(self):
         return self.rep
 
+class TrueCell(Exp):
+    def __init__(self):
+        self.parent = None
+        self.children = []
+        self.rep = self.val = 'True'
+
 class Root(Exp):
     def __init__(self, the_root):
         self.children = [the_root]
