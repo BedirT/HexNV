@@ -10,7 +10,6 @@ class And(Exp):
         self.val = self.rep = 'and'
         self.children = []
         
-
     def __str__(self):
         return '(' + str(self.left) + '+' + str(self.right) + ')'
 
