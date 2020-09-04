@@ -5,6 +5,9 @@ from expressions import Root
 from expressions import TrueCell
 
 import copy
+import sys
+
+sys.setrecursionlimit(10 ** 9)
 
 def appendToLeaves(leaves, root):
     if not leaves.children:

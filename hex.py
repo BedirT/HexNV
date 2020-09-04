@@ -16,11 +16,6 @@ class HexBoard:
             self.BOARD = [['.' for __ in range(self.BOARD_SIZE[0])] for _ in range(self.BOARD_SIZE[1])]
         else:
             self.BOARD = BOARD
-        # self.BOARD = [
-        #     ['B','W','W'],
-        #     ['W','W','B'],
-        #     ['B','W','B'],
-        # ]
         self.valid_moves = [[i, j] for i in range(self.BOARD_SIZE[0]) for j in range(self.BOARD_SIZE[1])]
         self.done = False # game is over or not
 
@@ -101,6 +96,7 @@ class HexBoard:
                 self.CHECK_BOARD[i][0] = True
                 self.check_connections(self.cell_connections([i, 0]), 'W')
                 if self.done:
+                    self.printBoard()
                     return 'W'
         # checking for black
         self.CHECK_BOARD = [[False for __ in range(self.BOARD_SIZE[0])] for _ in range(self.BOARD_SIZE[1])] 
@@ -109,6 +105,7 @@ class HexBoard:
                 self.CHECK_BOARD[0][i] = True
                 self.check_connections(self.cell_connections([0, i]), 'B')
                 if self.done:
+                    self.printBoard()
                     return 'B'
         return '='
 

@@ -7,8 +7,8 @@ To-Do:
 from numpy import random
 
 from exp_tree import ExpTree
-
 from expressions import Cell, And, Or
+from strategy_tree import parseStrategyTree
 
 class RandomAgent:
     def __init__(self, color):
@@ -32,17 +32,7 @@ class RuleAgent:
     def __init__(self, color, exp):
         self.color = color
         exp_tree = ExpTree(exp)
-        
-        ##### PLACEHOLDER TREE
-        c = Cell('a1')
-        d = Or()
-        c.left = d
-        d.left = Cell('b1')
-        d.right = Cell('b2')
-        root = c 
-        #####################
-
-        self.strategy = root
+        self.root = parseStrategyTree(exp_tree.root)
 
     def moves(self, state, last_move):
         '''
@@ -53,20 +43,14 @@ class RuleAgent:
 
     def next_moves(self, root):
         if root is None:
-            return [self.strategy]
-        pos_moves = self.getChildren(root.left) + self.getChildren(root.right)
+            return [self.root]
+        pos_moves = []
+        for c in root.children:
+            if isinstance(c, Or):
+                pos_moves.extend(c.children)
+            else:
+                pos_moves.append(c)
         return pos_moves
-
-    def getChildren(self, root):
-        children = []
-        if root is None:
-            return []
-        elif root.val == 'or':
-            children = children + self.getChildren(root.left)
-            children = children + self.getChildren(root.right)
-        else:
-            children.append(root)
-        return children
 
 
 class Human:

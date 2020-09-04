@@ -1,3 +1,23 @@
+'''
+This file is the main runner. We are checking if the given sequence
+is winning strategy or not. If not, we are giving out all the sequences
+that fails to be replied.
+
+The logic;
+- We have a strategy tree for the RuleAgent 'X'. X is playing as given in
+the tree. 
+- The verifier gives every possible response to the given move.
+- On this point there are four things that could happen:
+    - The game results in win for X, meaning that the branch can be closed.
+    (Happens before verifier gives any response)
+    - The game continues with the next branch on the strategy tree.
+    - The game results in a loss for X, meaning that given strategy has a
+    loosing sequence, so we give the prompt and end game state to the user.
+    - The game continues but there is no more moves left on the strategy given,
+    meaning the given strategy is incomplete. We prompt that to the user.
+
+'''
+
 from hex import HexBoard
 from actor import RuleAgent
 
@@ -7,26 +27,25 @@ verified = True
 agentColors = ['B', 'W'] # Black is always RuleAgent - FIx
 
 def loss_reached(game):
-    print("Entered expression has a losing sequence.\
+    print("\n------\nEntered expression has a losing sequence.\
                 \nHere is the game it lost:")
     game.printBoard()
     global verified
     verified = False
 
 def not_complete(game):
-    print(  "Entered expression is not complete. \
+    print(  "\n????\nEntered expression is not complete. \
             \nHere is the game it has no answer to:")
-    game.printBoard()
+    # game.printBoard()
     global verified 
     verified = False
 
 def win_reached(game):
-    print("Branch won!")
+    print("\n+++++Branch won!+++++\n")
     game.printBoard()
 
 def play_game(game_x, player, last_move):
     game = copy.deepcopy(game_x)
-    # print(id(game))
     game_stat = game.check_game_status()
     if game_stat != '=':  
         if game_stat != agentColors[0]:
@@ -39,10 +58,11 @@ def play_game(game_x, player, last_move):
     if player % 2 == 0:
         moved = False
         pos_moves = actor.moves(game.BOARD, last_move)
-        if len(pos_moves) == 0:
+        if not pos_moves:
             # Since no more move left and yet we still didn't win
             # this is a losing sequence
-            play_game(game, 1, last_move)
+            not_complete(game)
+            # play_game(game, 1, last_move)
             return
         for cell in pos_moves:
             action = cell.val
@@ -65,11 +85,14 @@ def play_game(game_x, player, last_move):
 
 if __name__ == '__main__':
     # exp = 'a1 {a2 {a3, b3} b2 {b3, c3}}'
-    exp = 'a1 {b1, b2}'
+    # 3x3 winning strgs
+    exp = 'b2 {b1, c1} {a3, b3}'
+    # exp = 'a3{ a2{a1, b1}, c1{b2, c2{b3, c3}}}'
+    # exp = 'a2{a1, b1}{a3, c2{b2, c1}{b3, c3}}'
     actor = RuleAgent('B', exp)
     counter = {'W':0, 'B':0}
 
-    board_size = [2, 2]
+    board_size = [3, 3]
 
     game = HexBoard(board_size) # initial game - empty board
 

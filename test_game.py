@@ -6,9 +6,11 @@ if __name__ == '__main__':
     actors = [RandomAgent('B'), RandomAgent('W')]
     counter = {'W':0, 'B':0}
 
-    board_size = [2, 2]
+    board_size = [3, 3]
     # num_of_games = 5
-    game = HexBoard(board_size, BOARD=[['B', 'W'], ['.', 'W']])
+    game = HexBoard(board_size, BOARD=[ ['W', 'B', 'W'], 
+                                        ['W', 'B', '.'],
+                                        ['B', 'B', 'B']])
     print(game.check_game_status())
 
 
