@@ -38,6 +38,7 @@ class RuleAgent:
         '''
         last_move: Cell object or None - MUST
         '''
+        # assert(isinstance(last_move, Cell))
         pos_moves = self.next_moves(last_move)
         return pos_moves # returns all possible moves
 

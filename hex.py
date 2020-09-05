@@ -96,7 +96,6 @@ class HexBoard:
                 self.CHECK_BOARD[i][0] = True
                 self.check_connections(self.cell_connections([i, 0]), 'W')
                 if self.done:
-                    self.printBoard()
                     return 'W'
         # checking for black
         self.CHECK_BOARD = [[False for __ in range(self.BOARD_SIZE[0])] for _ in range(self.BOARD_SIZE[1])] 
@@ -105,7 +104,6 @@ class HexBoard:
                 self.CHECK_BOARD[0][i] = True
                 self.check_connections(self.cell_connections([0, i]), 'B')
                 if self.done:
-                    self.printBoard()
                     return 'B'
         return '='
 
