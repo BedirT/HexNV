@@ -90,20 +90,23 @@ class HexBoard:
     
     def check_game_status(self):
         # checking for white
-        self.CHECK_BOARD = [[False for __ in range(self.BOARD_SIZE[0])] for _ in range(self.BOARD_SIZE[1])] 
+        
+        self.CHECK_BOARD = [[False for _ in range(self.BOARD_SIZE[0])] for _ in range(self.BOARD_SIZE[1])] 
         for i in range(self.BOARD_SIZE[0]):
             if self.BOARD[i][0] == 'W':
                 self.CHECK_BOARD[i][0] = True
                 self.check_connections(self.cell_connections([i, 0]), 'W')
                 if self.done:
+                    self.done = False
                     return 'W'
         # checking for black
-        self.CHECK_BOARD = [[False for __ in range(self.BOARD_SIZE[0])] for _ in range(self.BOARD_SIZE[1])] 
+        self.CHECK_BOARD = [[False for _ in range(self.BOARD_SIZE[0])] for _ in range(self.BOARD_SIZE[1])] 
         for i in range(self.BOARD_SIZE[1]):
             if self.BOARD[0][i] == 'B':
                 self.CHECK_BOARD[0][i] = True
                 self.check_connections(self.cell_connections([0, i]), 'B')
                 if self.done:
+                    self.done = False
                     return 'B'
         return '='
 

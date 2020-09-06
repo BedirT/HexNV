@@ -22,9 +22,32 @@ from actor import RuleAgent
 
 import copy
 
-incomplete = False
-loss = False
 agentColors = ['B', 'W'] # Black is always RuleAgent - FIx
+
+losses = []
+incompletes = []
+
+def print_customBoards(boards, board_size):
+    for i in boards:
+        for j in range(len(i)):
+            print(" "*(board_size-j), end="")
+            for x in i[j]:
+                print(x, end=" ")
+            print()
+        print()
+
+def unique_elements(given_list):
+    new_list = []
+    url_set = set()
+
+    for item in given_list:
+        xx= ''.join(str(v) for v in item)
+        if xx not in url_set:
+            url_set.add(xx)
+            new_list.append(item)
+        else:
+            pass
+    return new_list
 
 def loss_reached(game):
     '''
@@ -32,11 +55,10 @@ def loss_reached(game):
 
     Gives the prompt if the game state is a loss
     '''
-    print("\n------\nEntered expression has a losing sequence.\
-                \nHere is the game it lost:")
-    game.printBoard()
-    global loss
-    loss = True
+    # print("\n------\nEntered expression has a losing sequence.\
+    #             \nHere is the game it lost:")
+    # game.printBoard()
+    losses.append(game.BOARD)
 
 def not_complete(game):
     '''
@@ -44,11 +66,10 @@ def not_complete(game):
 
     Gives the prompt if the game state is incomplete
     '''
-    print(  "\n????\nEntered expression is not complete. \
-            \nHere is the game it has no answer to:")
-    game.printBoard()
-    global incomplete 
-    incomplete = True
+    # print(  "\n????\nEntered expression is not complete. \
+    #         \nHere is the game it has no answer to:")
+    # game.printBoard()
+    incompletes.append(game.BOARD)
 
 def win_reached(game):
     '''
@@ -56,8 +77,8 @@ def win_reached(game):
 
     Gives the prompt if the game state is a win
     '''
-    print("\n+++++Branch won!+++++\n")
-    game.printBoard()
+    # print("\n+++++Branch won!+++++\n")
+    # game.printBoard()
 
 def play_game(game_x, player, last_move):
     '''
@@ -89,34 +110,49 @@ def play_game(game_x, player, last_move):
             # this is an incomplete sequence
             not_complete(game)
             return
-        for cell in pos_moves:
+        for i, cell in enumerate(pos_moves):
             action = cell.val
             game.step(agentColors[0], action)
             play_game(game, 1, cell)
+            if i != len(pos_moves)-1:
+                game.rewind(action)
     else:
         # for each possible action play it
-        valid_moves = game.valid_moves
-        for action in valid_moves:
+        pos_moves = copy.deepcopy(game.valid_moves)
+        for i, action in enumerate(pos_moves):
             game.step(agentColors[1], action)
             play_game(game, 0, last_move)
+            if i != len(pos_moves)-1:
+                game.rewind(action)
 
 
 if __name__ == '__main__':
     # exp = 'a1 {a2 {a3, b3} b2 {b3, c3}}'
     # 3x3 winning strgs
-    # exp = 'b2 {b1, c1} {a3, b3}'
+    exp = 'b2 {a1, b1} {b3, c3}'
     # exp = 'a3{ a2{a1, b1}, c1{b2, c2{b3, c3}}}'
     # exp = 'a2{a1, b1}{a3, c2{b2, c1}{b3, c3}}'
-    ###
-    exp = 'a1 {a2}'
+    # exp = 'a1 {b1}'
+
     actor = RuleAgent('B', exp)
     counter = {'W':0, 'B':0}
 
-    board_size = [2, 2]
+    board_size = [3, 3]
 
     game = HexBoard(board_size) # initial game - empty board
 
     play_game(game, 0, None)
 
-    if not loss:
+    if not losses and not incompletes:
         print("Entered sequence is a winning strategy!")
+    else:
+        
+        print("Losing games")
+        losses = unique_elements(losses)
+        print_customBoards(losses, board_size[0])
+
+        print("Incomplete games")
+        incompletes = unique_elements(incompletes)
+        print_customBoards(incompletes, board_size[0])
+        
+

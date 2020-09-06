@@ -40,7 +40,7 @@ class RuleAgent:
         '''
         # assert(isinstance(last_move, Cell))
         pos_moves = self.next_moves(last_move)
-        return pos_moves # returns all possible moves
+        return list(set(pos_moves)) # returns all possible moves
 
     def next_moves(self, root):
         if root is None:
