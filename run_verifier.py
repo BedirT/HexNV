@@ -55,9 +55,6 @@ def loss_reached(game):
 
     Gives the prompt if the game state is a loss
     '''
-    # print("\n------\nEntered expression has a losing sequence.\
-    #             \nHere is the game it lost:")
-    # game.printBoard()
     losses.append(game.BOARD)
 
 def not_complete(game):
@@ -66,19 +63,7 @@ def not_complete(game):
 
     Gives the prompt if the game state is incomplete
     '''
-    # print(  "\n????\nEntered expression is not complete. \
-    #         \nHere is the game it has no answer to:")
-    # game.printBoard()
     incompletes.append(game.BOARD)
-
-def win_reached(game):
-    '''
-    :: Call if game state is a win
-
-    Gives the prompt if the game state is a win
-    '''
-    # print("\n+++++Branch won!+++++\n")
-    # game.printBoard()
 
 def play_game(game_x, player, last_move):
     '''
@@ -99,7 +84,6 @@ def play_game(game_x, player, last_move):
             loss_reached(game)
             return
         # strategy branch won
-        win_reached(game)
         return
     if player % 2 == 0:
         pos_moves = actor.moves(game.BOARD, last_move)
@@ -130,7 +114,7 @@ if __name__ == '__main__':
     # exp = 'a1 {a2 {a3, b3} b2 {b3, c3}}'
     # 3x3 winning strgs
     exp = 'b2 {a1, b1} {b3, c3}'
-    # exp = 'a3{ a2{a1, b1}, c1{b2, c2{b3, c3}}}'
+    # exp = 'a3{a2 {a1, b1}, c1{b2, c2{b3, c3}}}'
     # exp = 'a2{a1, b1}{a3, c2{b2, c1}{b3, c3}}'
     # exp = 'a1 {b1}'
 
