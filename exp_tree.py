@@ -14,11 +14,11 @@ class ExpTree:
             root = self.root
         print('-' + prefix + str(root.rep))
         try:
-            self.print_tree(root.left, prefix+'--')
+            self.print_tree(root.subs[0], prefix+'--')
         except:
             pass
         try:
-            self.print_tree(root.right, prefix+'--') 
+            self.print_tree(root.subs[1], prefix+'--') 
         except:
             pass
 
@@ -67,10 +67,10 @@ class ExpTree:
             if isinstance(exp, Cell):
                 the_stack.append(exp)
             else:
-                exp.left = the_stack.pop()
-                exp.left.parent = exp
-                exp.right = the_stack.pop()
-                exp.right.parent = exp
+                exp.subs[0] = the_stack.pop()
+                exp.subs[0].parent = exp
+                exp.subs[1] = the_stack.pop()
+                exp.subs[1].parent = exp
                 the_stack.append(exp)
 
         the_stack[0].parent = Root(the_stack[0])

@@ -19,6 +19,7 @@ the tree.
 
 from hex import HexBoard
 from actor import RuleAgent
+from strategy_tree import print_tree
 
 import copy
 
@@ -38,12 +39,12 @@ def print_customBoards(boards, board_size):
 
 def unique_elements(given_list):
     new_list = []
-    url_set = set()
+    uq_set = set()
 
     for item in given_list:
-        xx= ''.join(str(v) for v in item)
-        if xx not in url_set:
-            url_set.add(xx)
+        s = ''.join(str(v) for v in item)
+        if s not in uq_set:
+            uq_set.add(s)
             new_list.append(item)
         else:
             pass
@@ -78,6 +79,7 @@ def play_game(game_x, player, last_move):
                                     # we don't edit the original game
                                     # (Necessary for recursion)
     game_stat = game.check_game_status()
+    
     if game_stat != '=':  
         if game_stat != agentColors[0]:
             # loss
@@ -120,17 +122,20 @@ if __name__ == '__main__':
 
     actor = RuleAgent('B', exp)
     counter = {'W':0, 'B':0}
-
+    # print_tree(actor.root)
     board_size = [3, 3]
 
     game = HexBoard(board_size) # initial game - empty board
 
     play_game(game, 0, None)
 
+    print('loss:', len(unique_elements(losses)))
+    print('incomplete:', len(unique_elements(incompletes)))
+
+    
     if not losses and not incompletes:
         print("Entered sequence is a winning strategy!")
     else:
-        
         print("Losing games")
         losses = unique_elements(losses)
         print_customBoards(losses, board_size[0])
@@ -138,5 +143,4 @@ if __name__ == '__main__':
         print("Incomplete games")
         incompletes = unique_elements(incompletes)
         print_customBoards(incompletes, board_size[0])
-        
-
+    

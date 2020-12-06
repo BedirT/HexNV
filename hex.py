@@ -90,7 +90,6 @@ class HexBoard:
     
     def check_game_status(self):
         # checking for white
-        
         self.CHECK_BOARD = [[False for _ in range(self.BOARD_SIZE[0])] for _ in range(self.BOARD_SIZE[1])] 
         for i in range(self.BOARD_SIZE[0]):
             if self.BOARD[i][0] == 'W':

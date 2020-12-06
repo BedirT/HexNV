@@ -32,6 +32,7 @@ class RuleAgent:
     def __init__(self, color, exp):
         self.color = color
         exp_tree = ExpTree(exp)
+        exp_tree.print_tree()
         self.root = parseStrategyTree(exp_tree.root)
 
     def moves(self, state, last_move):
