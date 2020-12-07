@@ -24,6 +24,7 @@ def play_game(actor1, actor2, score, num_not_complete):
         marked = []
 
         while game.check_game_status() not in agentColors:
+            
             if cur % 2 == 0:
                 color = agentColors[0]
                 
@@ -42,25 +43,32 @@ def play_game(actor1, actor2, score, num_not_complete):
                 # if marked:
                 #     print("pos moves 2", [i.val for i in pos_moves])
                 if not pos_moves:
-                    # Rewind the move and try again
-                    marked.append(move_seq[-1])
-                    # print("mov_seq", [i.val for i in move_seq])
-                    
-                    game.rewind(move_seq[-1].val)
-                    game.rewind(move_seq_2[-1])
+                    if not move_seq:
+                        not_complete = True
+                    else:
+                        # Rewind the move and try again
+                        marked.append(move_seq[-1])
+                        # print("mov_seq", [i.val for i in move_seq])
 
-                    ### add if initial move is wrong
-                    move_seq.pop()
-                    move_seq_2.pop()
+                        game.rewind(move_seq[-1].val)
+                        game.rewind(move_seq_2[-1])
 
-                    last_move = move_seq[-1]
-                    continue
+                        ### add if initial move is wrong
+                        move_seq.pop()
+                        move_seq_2.pop()
 
-                for i, cell in enumerate(pos_moves):
-                    action = cell.val
-                    last_move = cell
-                move_seq.append(cell)
-                game.step(color, action)
+                        if move_seq:
+                            last_move = move_seq[-1]
+                        else:
+                            last_move = None
+                        continue
+
+                else:
+                    for i, cell in enumerate(pos_moves):
+                        action = cell.val
+                        last_move = cell
+                    move_seq.append(cell)
+                    game.step(color, action)
                 
             else:
                 color, action = agentColors[1], actor2.step(game.BOARD)
@@ -84,19 +92,22 @@ if __name__ == "__main__":
     num_not_complete = 0
 
     # exp = 'b2 {a1, b1} {b3, c3}'
-    exp = 'a3 {a2 {a1, b1}, c1 {b2, c2 {b3, c3}}}'
+    # exp = 'a3 {a2 {a1, b1}, c1 {b2, c2 {b3, c3}}}'
+    exp = 'a1 {a2 {a3, b3}, c3 {b2, c2 {b1, c1}}}'
+    # exp = 'a3 {a2 {a1, b1}, c1}'
 
     actor1 = RuleAgent(agentColors[0], exp)
     actor2 = RandomAgent(agentColors[1])
 
-    # print_tree(actor1.root)
+    print_tree(actor1.root)
 
-    # for _ in range(num_of_games):
-    #     play_game(actor1, actor2, score, num_not_complete)
+    for _ in range(num_of_games):
+        # print(score['W'], score['B'])
+        play_game(actor1, actor2, score, num_not_complete)
         
-    # print('White wins: ', score['W'])
-    # print('Black wins: ', score['B'])
-    # print('Number of incomplete: ', num_not_complete)
+    print('White wins: ', score['W'])
+    print('Black wins: ', score['B'])
+    print('Number of incomplete: ', num_not_complete)
 
     
 

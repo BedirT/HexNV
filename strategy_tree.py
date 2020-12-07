@@ -120,6 +120,8 @@ def parseStrategyTree(root):
             v1 = root.subs[0]
             v2 = root.subs[1]
             root.children.extend([v1, v2])
+            # temporary solution, there is an issue here somewhere
+            root.children = list(set(root.children))
     else:
         raise Exception
     # print(type(root.children))

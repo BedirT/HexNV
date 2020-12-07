@@ -118,7 +118,6 @@ if __name__ == '__main__':
     exp = 'b2 {a1, b1} {b3, c3}'
     # exp = 'a3{a2 {a1, b1}, c1{b2, c2{b3, c3}}}'
     # exp = 'a2{a1, b1}{a3, c2{b2, c1}{b3, c3}}'
-    # exp = 'a1 {b1}'
 
     actor = RuleAgent('B', exp)
     counter = {'W':0, 'B':0}

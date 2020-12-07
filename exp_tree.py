@@ -49,7 +49,8 @@ class ExpTree:
                     the_queue.append(the_stack.pop())
                 the_stack.pop()
             elif exp == ',':
-                # create obj
+                if last_exp == '}':
+                    the_queue.append(the_stack.pop())
                 _obj = Or()
                 the_stack.append(_obj)
             else:
